@@ -626,13 +626,11 @@ def test_cnv_discordant_read_calls(fixture, api: AnophelesCnvData):
             assert isinstance(d2, xr.DataArray)
 
     # Check with a contig that should not exist
-    with pytest.raises(
-        ValueError,
-        match="No CNV discordant read calls data found|no CNVs available for contig",
-    ):
-        api.cnv_discordant_read_calls(
-            contigs="foobar", sample_sets=random.choice(all_sample_sets)
-        )
+    ds = api.cnv_discordant_read_calls(
+        contigs="foobar", sample_sets=random.choice(all_sample_sets)
+    )
+    assert isinstance(ds, xr.Dataset)
+    assert ds.sizes["variants"] == 0
 
     # Check with a sample set that should not exist
     with pytest.raises(ValueError):

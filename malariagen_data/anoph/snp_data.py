@@ -67,12 +67,18 @@ class AnophelesSnpData(
         self._default_site_mask = default_site_mask
 
         # Set up caches.
-        # TODO review type annotations here, maybe can tighten
-        self._cache_snp_sites = None
-        self._cache_snp_genotypes: Dict = dict()
-        self._cache_site_filters: Dict = dict()
-        self._cache_site_annotations = None
-        self._cache_locate_site_class: Dict = dict()
+        self._cache_snp_sites: Optional[zarr.hierarchy.Group] = None
+        self._cache_snp_genotypes: Dict[base_params.sample_set, zarr.hierarchy.Group] = (
+            dict()
+        )
+        self._cache_site_filters: Dict[base_params.site_mask, zarr.hierarchy.Group] = (
+            dict()
+        )
+        self._cache_site_annotations: Optional[zarr.hierarchy.Group] = None
+        self._cache_locate_site_class: Dict[
+            Tuple[Region, Optional[base_params.site_mask], base_params.site_class],
+            np.ndarray,
+        ] = dict()
 
         # Create the SNP-calls cache as a per-instance lru_cache wrapping the
         # bound method.  Storing it on the instance (rather than using a
