@@ -11,8 +11,12 @@ def test_safestore_getitem_success():
 def test_safestore_getitem_keyerror_raises_filenotfound():
     store = {}
     safe_store = SafeStore(store)
-    with pytest.raises(FileNotFoundError):
+    with pytest.raises(FileNotFoundError) as excinfo:
         _ = safe_store["missing_key"]
+    # Ensure the missing key is represented in the error message
+    assert "missing_key" in str(excinfo.value)
+    # Ensure the original KeyError is preserved as the cause
+    assert isinstance(excinfo.value.__cause__, KeyError)
 
 
 def test_safestore_len():
