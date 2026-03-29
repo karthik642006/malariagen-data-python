@@ -408,8 +408,16 @@ class AnophelesHapData(
 
             # Apply the query.
             sample_query_options = sample_query_options or {}
+            # Make a copy to avoid modifying the caller's dictionary
+            _options = sample_query_options.copy()
+            # Pop local_dict and global_dict from sample_query_options if present, otherwise default to empty dicts
+            local_dict = _options.pop("local_dict", {})
+            global_dict = _options.pop("global_dict", {})
             loc_samples = df_samples_phased.eval(
-                sample_query_prepped, **sample_query_options
+                sample_query_prepped,
+                **_options,
+                local_dict=local_dict,
+                global_dict=global_dict,
             ).values
             if np.count_nonzero(loc_samples) == 0:
                 # Bail out, no samples matching the query.
