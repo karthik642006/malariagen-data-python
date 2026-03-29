@@ -8,7 +8,7 @@ def test_safestore_getitem_success():
     assert safe_store["foo"] == "bar"
 
 
-def test_safestore_getitem_keyerror_raises_filenotfound():
+def test_safestore_getitem_keyerror_raises_filenotfounderror():
     store = {}
     safe_store = SafeStore(store)
     with pytest.raises(FileNotFoundError) as excinfo:
