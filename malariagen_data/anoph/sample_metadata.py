@@ -801,8 +801,16 @@ class AnophelesSampleMetadata(AnophelesBase):
             df_before_query = df_samples
 
             # Use the python engine in order to support extension array dtypes, e.g. Float64, Int64, boolean.
+            # Pop local_dict and global_dict from sample_query_options if present, otherwise default to empty dicts
+            _options = sample_query_options.copy()
+            local_dict = _options.pop("local_dict", {})
+            global_dict = _options.pop("global_dict", {})
             df_samples = df_samples.query(
-                prepared_sample_query, **sample_query_options, engine="python"
+                prepared_sample_query,
+                **_options,
+                engine="python",
+                local_dict=local_dict,
+                global_dict=global_dict,
             )
             df_samples = df_samples.reset_index(drop=True)
 
@@ -1192,8 +1200,16 @@ class AnophelesSampleMetadata(AnophelesBase):
             # Get the Pandas Series as a NumPy array of Boolean values.
             # Note: if `prepared_sample_query` is an internal query, this will select all samples,
             # since `sample_metadata` should have already applied the internal query.
+            # Pop local_dict and global_dict from sample_query_options if present, otherwise default to empty dicts
+            _options = sample_query_options.copy()
+            local_dict = _options.pop("local_dict", {})
+            global_dict = _options.pop("global_dict", {})
             loc_samples = df_samples.eval(
-                prepared_sample_query, **sample_query_options, engine="python"
+                prepared_sample_query,
+                **_options,
+                engine="python",
+                local_dict=local_dict,
+                global_dict=global_dict,
             ).values
 
             # Convert the sample indices to a list.
