@@ -977,16 +977,8 @@ class AnophelesBase:
         # Determine which samples match the sample query.
         if sample_query != "":
             # Use the python engine in order to support extension array dtypes, e.g. Float64, Int64, boolean.
-            # Pop local_dict and global_dict from sample_query_options if present, otherwise default to empty dicts
-            _options = sample_query_options.copy()
-            local_dict = _options.pop("local_dict", {})
-            global_dict = _options.pop("global_dict", {})
             loc_samples = df_samples.eval(
-                sample_query,
-                **_options,
-                engine="python",
-                local_dict=local_dict,
-                global_dict=global_dict,
+                sample_query, **sample_query_options, engine="python"
             )
         else:
             loc_samples = pd.Series(True, index=df_samples.index)

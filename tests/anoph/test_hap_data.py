@@ -181,15 +181,8 @@ def check_haplotypes(
         df_samples = df_samples.set_index("sample_id")
         df_samples_phased = df_samples.loc[samples_phased].reset_index()
         sample_query_options = sample_query_options or {}
-        # Make a copy because we'll pop local_dict and global_dict for the query
-        _options = sample_query_options.copy()
-        local_dict = _options.pop("local_dict", {})
-        global_dict = _options.pop("global_dict", {})
         df_samples_queried = df_samples_phased.query(
-            sample_query,
-            **_options,
-            local_dict=local_dict,
-            global_dict=global_dict,
+            sample_query, **sample_query_options
         )
         samples_selected = df_samples_queried["sample_id"].values
     else:
