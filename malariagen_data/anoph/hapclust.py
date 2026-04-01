@@ -606,7 +606,7 @@ class AnophelesHapClustAnalysis(
             self.snp_effects(
                 transcript=transcript,
             )
-            .query(snp_query)
+            .query(snp_query, local_dict={}, global_dict={})
             .reset_index(drop=True)
         )
 
@@ -688,7 +688,11 @@ class AnophelesHapClustAnalysis(
 
         if snp_filter_min_maf:
             df_haps = df_haps.assign(af=lambda x: x.sum(axis=1) / x.shape[1])
-            df_haps = df_haps.query("af > @snp_filter_min_maf").drop(columns="af")
+            df_haps = df_haps.query(
+                "af > @snp_filter_min_maf",
+                local_dict={"snp_filter_min_maf": snp_filter_min_maf},
+                global_dict={},
+            ).drop(columns="af")
 
         n_snps_transcript = df_haps.shape[0]
 

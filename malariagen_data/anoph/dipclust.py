@@ -486,7 +486,11 @@ class AnophelesDipClustAnalysis(
 
         if snp_filter_min_maf:
             df_snps = df_snps.assign(af=lambda x: x.sum(axis=1) / (x.shape[1] * 2))
-            df_snps = df_snps.query("af > @snp_filter_min_maf").drop(columns="af")
+            df_snps = df_snps.query(
+                "af > @snp_filter_min_maf",
+                local_dict={"snp_filter_min_maf": snp_filter_min_maf},
+                global_dict={},
+            ).drop(columns="af")
 
         if not df_snps.empty:
             n_snps = len(df_snps)
