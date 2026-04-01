@@ -1375,7 +1375,9 @@ class AnophelesSampleMetadata(AnophelesBase):
                 )
             data["symbol"] = ""
             for key, value in symbol.items():
-                data.loc[data.query(value).index, "symbol"] = key
+                data.loc[
+                    data.query(value, local_dict={}, global_dict={}).index, "symbol"
+                ] = key
             symbol_prepped = "symbol"
 
         # Handle missing data in a consistent way.
@@ -1428,7 +1430,9 @@ class AnophelesSampleMetadata(AnophelesBase):
                 )
             data["color"] = ""
             for key, value in color.items():
-                data.loc[data.query(value).index, "color"] = key
+                data.loc[
+                    data.query(value, local_dict={}, global_dict={}).index, "color"
+                ] = key
             color_prepped = "color"
 
         # Finish handling of color parameter.
@@ -1879,7 +1883,7 @@ def _locate_cohorts(*, cohorts, data, min_cohort_size):
 
         for coh, query in cohorts.items():
             try:
-                loc_coh = data.eval(query).values
+                loc_coh = data.eval(query, local_dict={}, global_dict={}).values
             except (KeyError, NameError, SyntaxError, TypeError, AttributeError) as e:
                 raise ValueError(
                     f"Invalid query for cohort {coh!r}: {query!r}. Error: {e}"

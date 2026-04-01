@@ -667,7 +667,9 @@ class AnophelesCnvFrequencyAnalysis(AnophelesCnvData, AnophelesFrequencyAnalysis
 
         debug("apply variant query")
         if variant_query is not None:
-            loc_variants = df_variants.eval(variant_query).values
+            loc_variants = df_variants.eval(
+                variant_query, local_dict={}, global_dict={}
+            ).values
             # Convert boolean mask to integer indices for NumPy 2.x compatibility
             variant_indices = np.where(loc_variants)[0]
             ds_out = ds_out.isel(variants=variant_indices)

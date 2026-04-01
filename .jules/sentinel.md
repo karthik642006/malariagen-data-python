@@ -1,0 +1,4 @@
+## 2026-04-01 - [Secure pandas query evaluation]
+**Vulnerability:** Unrestricted execution environment when evaluating user input via `pandas.DataFrame.eval()` and `.query()`.
+**Learning:** By default, pandas inspects the caller's stack frame via `sys._getframe()` to resolve variable references (e.g., using the `@` prefix). When passing unsanitized user query strings into methods like `df_haps.eval()` or `data.query()`, malicious inputs could potentially reference sensitive internal variables, local instances, or execute unintended functions.
+**Prevention:** Always restrict the execution environment when evaluating dynamic, user-provided pandas queries by explicitly passing `local_dict={}` and `global_dict={}`. If specific internal variables are needed in the query string, pass them explicitly via the `local_dict` (e.g., `local_dict={'snp_filter_min_maf': snp_filter_min_maf}`).

@@ -1727,7 +1727,7 @@ class AnophelesDataResource(
                     # Apply each query in the mapping to create the _partition column
                     for label, query in color.items():
                         # Apply the query and assign the label to matching rows
-                        mask = df_haps.eval(query)
+                        mask = df_haps.eval(query, local_dict={}, global_dict={})
                         df_haps.loc[mask, "_partition"] = label
 
                     # Clean up the _partition column to avoid issues with special characters
