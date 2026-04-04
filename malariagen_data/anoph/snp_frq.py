@@ -682,7 +682,9 @@ class AnophelesSnpFrequencyAnalysis(AnophelesSnpData, AnophelesFrequencyAnalysis
 
         # Apply variant query.
         if variant_query is not None:
-            loc_variants = np.asarray(df_variants.eval(variant_query))
+            loc_variants = np.asarray(
+                df_variants.eval(variant_query, local_dict={}, global_dict={})
+            )
 
             # Check for no SNPs remaining after applying variant query.
             if np.count_nonzero(loc_variants) == 0:
@@ -826,7 +828,9 @@ class AnophelesSnpFrequencyAnalysis(AnophelesSnpData, AnophelesFrequencyAnalysis
 
         # Apply variant query if given.
         if variant_query is not None:
-            loc_variants = df_variants.eval(variant_query).values
+            loc_variants = df_variants.eval(
+                variant_query, local_dict={}, global_dict={}
+            ).values
 
             # Check for no SNPs remaining after applying variant query.
             if np.count_nonzero(loc_variants) == 0:
@@ -915,7 +919,7 @@ class AnophelesSnpFrequencyAnalysis(AnophelesSnpData, AnophelesFrequencyAnalysis
             df_snps = df_snps.loc[loc_sites]
 
         if snp_query is not None:
-            df_snps = df_snps.query(snp_query)
+            df_snps = df_snps.query(snp_query, local_dict={}, global_dict={})
 
         return df_snps
 
