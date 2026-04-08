@@ -359,8 +359,18 @@ class AnophelesPhenotypeData:
         # 5. Apply user's sample_query if provided
         if sample_query:
             try:
+                # Use the python engine in order to support extension array dtypes.
+                # Pop local_dict and global_dict from sample_query_options if present,
+                # otherwise default to empty dicts to avoid code injection vulnerabilities.
+                _options = (sample_query_options or {}).copy()
+                local_dict = _options.pop("local_dict", {})
+                global_dict = _options.pop("global_dict", {})
                 df_merged = df_merged.query(
-                    sample_query, **(sample_query_options or {})
+                    sample_query,
+                    **_options,
+                    engine="python",
+                    local_dict=local_dict,
+                    global_dict=global_dict,
                 )
             except (pd.errors.UndefinedVariableError, SyntaxError) as e:
                 warnings.warn(f"Invalid sample_query '{sample_query}': {e}")
