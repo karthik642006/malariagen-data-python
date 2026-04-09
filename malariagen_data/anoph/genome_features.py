@@ -114,7 +114,7 @@ class AnophelesGenomeFeaturesData(AnophelesGenomeSequenceData):
             df = self._genome_features(attributes=attributes)
 
             # Apply contig query.
-            df = df.query(f"contig == '{contig}'")
+            df = df.loc[df["contig"] == contig]
             return df
 
     def _prep_gff_attributes(
@@ -189,7 +189,7 @@ class AnophelesGenomeFeaturesData(AnophelesGenomeSequenceData):
         df_gf = df_gf.explode(column="Parent", ignore_index=True)
 
         # Query to find children of the requested parent.
-        df_children = df_gf.query(f"Parent == '{parent}'")
+        df_children = df_gf.loc[df_gf["Parent"] == parent]
 
         return df_children.copy()
 
@@ -665,7 +665,7 @@ class AnophelesGenomeFeaturesData(AnophelesGenomeSequenceData):
     def _plot_genes_setup_data(self, *, region):
         attributes = [a for a in self._gff_default_attributes if a != "Parent"]
         df_genome_features = self.genome_features(region=region, attributes=attributes)
-        data = df_genome_features.query(f"type == '{self._gff_gene_type}'").copy()
+        data = df_genome_features.loc[df_genome_features["type"] == self._gff_gene_type].copy()
         tooltips = [(a.capitalize(), f"@{a}") for a in attributes]
         tooltips += [("Location", "@contig:@start{,}-@end{,}")]
         return data, tooltips
