@@ -1,0 +1,4 @@
+## $(date +%Y-%m-%d) - Fix Pandas Query Injection
+**Vulnerability:** Code injection vulnerability caused by using `f-strings` to interpolate variables directly into `pandas.DataFrame.query()` when `engine='python'` is configured or defaulted.
+**Learning:** This codebase heavily uses pandas queries and evaluations. Constructing `query` strings manually with `f-strings` (e.g., `df.query(f"ID == '{region}'")`) exposes the execution engine to arbitrary code injection. The issue occurs across multiple submodules including data utilities, plotting/genome features, and frequency handlers.
+**Prevention:** Avoid string interpolation within `pandas.DataFrame.query()`. Instead, prefer boolean indexing using `.loc[]` (e.g., `df.loc[df["ID"] == region]`) or bind variables securely via standard query syntax (`df.query("ID == @region")`).
