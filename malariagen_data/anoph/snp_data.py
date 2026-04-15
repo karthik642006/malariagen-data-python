@@ -71,9 +71,9 @@ class AnophelesSnpData(
         self._cache_snp_genotypes: Dict[
             base_params.sample_set, zarr.hierarchy.Group
         ] = dict()
-        self._cache_site_filters: Dict[
-            base_params.site_mask, zarr.hierarchy.Group
-        ] = dict()
+        self._cache_site_filters: Dict[base_params.site_mask, zarr.hierarchy.Group] = (
+            dict()
+        )
         self._cache_site_annotations: Optional[zarr.hierarchy.Group] = None
         self._cache_locate_site_class: Dict[Tuple[Any, ...], np.ndarray] = dict()
 
