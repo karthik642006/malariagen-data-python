@@ -1,0 +1,4 @@
+## 2024-05-24 - [Code Injection in pandas DataFrame query]
+**Vulnerability:** pandas DataFrame `query()` and `eval()` methods were used with f-strings interpolating unsanitized input (`gene_annotation.query(f"ID == '{region}'")`).
+**Learning:** Because this codebase uses `engine='python'` for pandas evaluations to support extension arrays, string interpolation creates a direct code injection vulnerability. Any string executed by `query` or `eval` with the Python engine is essentially executed as Python code, making unsanitized string formatting highly dangerous.
+**Prevention:** Never use f-strings or string concatenation for variables inside pandas `query()` or `eval()`. Instead, use pandas' safe variable binding syntax (`@variable`) or standard boolean indexing (`df.loc[df['col'] == variable]`). When using `@variable` with `local_dict`/`global_dict` restrictions, ensure the variables are properly passed in the evaluation context.
