@@ -1,0 +1,4 @@
+## 2024-05-24 - [Fix Code Injection in pandas DataFrame query]
+**Vulnerability:** Code injection vulnerability via unsafe f-strings in `pandas.DataFrame.query()` calls (e.g., `df.query(f"col == '{val}'")`).
+**Learning:** The codebase defaults to `engine='python'` in pandas evaluation methods to support extension array dtypes like Float64 and Int64. This makes arbitrary string interpolation inside `query()` expressions extremely dangerous, as malicious input could be executed as Python code.
+**Prevention:** Avoid string interpolation inside `pandas.DataFrame.query()`. Instead, use safe variable bindings with the `@` syntax (e.g., `df.query("col == @val")`). When creating local variables exclusively for queries to avoid complex dotted expressions, append `# noqa: F841` to prevent ruff from flagging them as unused.
