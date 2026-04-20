@@ -246,7 +246,7 @@ def test_pca_exclude_samples(fixture, api: AnophelesPca):
     assert pca_evr.shape[0] == n_components
 
     # Check exclusions.
-    assert len(pca_df.query(f"sample_id in {exclude_samples}")) == 0
+    assert len(pca_df.query("sample_id in @exclude_samples")) == 0
 
 
 @parametrize_with_cases("fixture,api", cases=".")
@@ -310,9 +310,9 @@ def test_pca_fit_exclude_samples(fixture, api: AnophelesPca):
     # Check exclusions.
     assert not pca_df["pca_fit"].all()
     assert pca_df["pca_fit"].sum() == n_samples - n_samples_excluded
-    assert len(pca_df.query(f"sample_id in {exclude_samples}")) == n_samples_excluded
+    assert len(pca_df.query("sample_id in @exclude_samples")) == n_samples_excluded
     assert (
-        len(pca_df.query(f"sample_id in {exclude_samples} and not pca_fit"))
+        len(pca_df.query("sample_id in @exclude_samples and not pca_fit"))
         == n_samples_excluded
     )
 

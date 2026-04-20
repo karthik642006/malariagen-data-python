@@ -1,0 +1,4 @@
+## 2025-02-14 - [Code Injection & Insecure Deserialization]
+**Vulnerability:** Found string interpolation (f-strings) inside `pandas.DataFrame.query()` which introduces severe code injection vulnerabilities, especially since the codebase defaults to `engine='python'`. Also found `np.load()` being used without `allow_pickle=False`.
+**Learning:** `np.load()` defaults to `allow_pickle=False` in newer NumPy versions, but explicit assignment is required for security back-compatibility. Pandas `query()` provides a `@` syntax that securely binds local variables without exposing string format parameters to execution context.
+**Prevention:** Always use safe variable binding (`df.query("col == @val")`) instead of f-strings for Pandas queries. Explicitly pass `allow_pickle=False` to `np.load()` when reading from cache files.
