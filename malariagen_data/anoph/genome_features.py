@@ -114,7 +114,7 @@ class AnophelesGenomeFeaturesData(AnophelesGenomeSequenceData):
             df = self._genome_features(attributes=attributes)
 
             # Apply contig query.
-            df = df.query(f"contig == '{contig}'")
+            df = df.query("contig == @contig")
             return df
 
     def _prep_gff_attributes(
