@@ -1,0 +1,4 @@
+## 2024-05-24 - Pandas query() code injection vulnerability via f-strings
+**Vulnerability:** Code injection vulnerability allowing arbitrary code execution when using f-strings inside `pandas.query()`.
+**Learning:** `pandas.query()` (especially when `engine='python'` is used as is standard in this project) is vulnerable to code injection if variable substitution is done via f-strings instead of safe local variable binding via the `@` prefix. Even variables like `contig` or `region` could contain unsanitized user input in some execution contexts.
+**Prevention:** Always use `@var_name` syntax to reference local variables inside `pandas.query()`. If using properties or expressions (like `r.end` or `self._gff_gene_type`), define them as local variables immediately before the `query()` call and append `# noqa: F841` to prevent ruff from flagging them as unused.
