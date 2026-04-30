@@ -1,0 +1,4 @@
+## 2025-02-14 - Fix Pandas Query Injection
+**Vulnerability:** Code injection via f-strings in `pandas.DataFrame.query()`.
+**Learning:** Due to the default `engine='python'` in the evaluation methods to support ExtensionArray dtypes, any strings embedded inside `.query()` calls could potentially be evaluated as Python code. Since multiple functions took raw string identifiers (like `contig` names) and interpolated them directly via f-strings (e.g. `df.query(f"contig == '{contig}'")`), they were vulnerable.
+**Prevention:** Avoid string interpolation inside `.query()`. Instead, use safe variable binding (`df.query("contig == @contig")`). Also learned that `@` variable binding in `.query()` naturally supports object properties like `@r.end` and `@self._gff_gene_type` without needing intermediate variables.
