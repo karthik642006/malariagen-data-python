@@ -114,7 +114,7 @@ class AnophelesGenomeFeaturesData(AnophelesGenomeSequenceData):
             df = self._genome_features(attributes=attributes)
 
             # Apply contig query.
-            df = df.query(f"contig == '{contig}'")
+            df = df.query("contig == @contig")
             return df
 
     def _prep_gff_attributes(
@@ -158,9 +158,11 @@ class AnophelesGenomeFeaturesData(AnophelesGenomeSequenceData):
                         contig=r.contig, attributes=attributes_normed
                     )
                     if r.end is not None:
-                        df_part = df_part.query(f"start <= {r.end}")
+                        rend = r.end  # noqa: F841
+                        df_part = df_part.query("start <= @rend")
                     if r.start is not None:
-                        df_part = df_part.query(f"end >= {r.start}")
+                        rstart = r.start  # noqa: F841
+                        df_part = df_part.query("end >= @rstart")
                     parts.append(df_part)
                 df = pd.concat(parts, axis=0)
                 return df.sort_values(["contig", "start"]).reset_index(drop=True).copy()
@@ -189,7 +191,7 @@ class AnophelesGenomeFeaturesData(AnophelesGenomeSequenceData):
         df_gf = df_gf.explode(column="Parent", ignore_index=True)
 
         # Query to find children of the requested parent.
-        df_children = df_gf.query(f"Parent == '{parent}'")
+        df_children = df_gf.query("Parent == @parent")
 
         return df_children.copy()
 
@@ -665,7 +667,7 @@ class AnophelesGenomeFeaturesData(AnophelesGenomeSequenceData):
     def _plot_genes_setup_data(self, *, region):
         attributes = [a for a in self._gff_default_attributes if a != "Parent"]
         df_genome_features = self.genome_features(region=region, attributes=attributes)
-        data = df_genome_features.query(f"type == '{self._gff_gene_type}'").copy()
+        data = df_genome_features.query("type == @self._gff_gene_type").copy()
         tooltips = [(a.capitalize(), f"@{a}") for a in attributes]
         tooltips += [("Location", "@contig:@start{,}-@end{,}")]
         return data, tooltips
