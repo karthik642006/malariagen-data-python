@@ -1,0 +1,4 @@
+## 2024-05-15 - Prevent Code Injection in Pandas Query Method
+**Vulnerability:** Found multiple instances of pandas `DataFrame.query()` using Python f-strings with unsanitized user inputs or attribute properties (e.g., `df.query(f"ID == '{region}'")`). This introduces a severe code injection vulnerability since pandas uses Python's `eval` under the hood.
+**Learning:** Standard f-strings within pandas queries are dangerous as they interpolate strings directly into the evaluation context, allowing arbitrary code execution.
+**Prevention:** Always use pandas' safe `@` prefix variable binding (e.g., `df.query("ID == @region")`). For object properties inside queries, create a temporary local variable (appending `# noqa: F841` to satisfy ruff's unused variable check) and use that in the `@` syntax.
