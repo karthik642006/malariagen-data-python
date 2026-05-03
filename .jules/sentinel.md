@@ -1,0 +1,4 @@
+## 2026-05-03 - [Insecure numpy.load Usage]
+**Vulnerability:** Found `np.load` being called without explicit `allow_pickle=False` in the caching mechanism (`malariagen_data/anoph/base.py`). This allows arbitrary code execution via object deserialization if a user loads a malicious, untrusted or tampered `.npz` file from the results cache.
+**Learning:** This repo caches outputs as Zarr or `.npz` formats locally. `np.load` defaults to `allow_pickle=True` in older numpy versions and while it is disabled by default in newer versions, explicit configuration is necessary for safe fallback handling of legacy npz caches.
+**Prevention:** Always explicitly pass `allow_pickle=False` when using `np.load`, unless loading object arrays from fully trusted and verified internal sources, which is rarely needed.
