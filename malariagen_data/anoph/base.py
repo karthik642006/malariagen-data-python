@@ -1036,7 +1036,7 @@ class AnophelesBase:
         # For backwards compatibility, read npz format.
         legacy_results_path = cache_path / "results.npz"
         if legacy_results_path.exists():  # pragma: no cover
-            return np.load(legacy_results_path)
+            return np.load(legacy_results_path, allow_pickle=False)
 
         raise CacheMiss
 
