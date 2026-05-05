@@ -1,0 +1,4 @@
+## 2024-05-15 - Code Injection via `pandas.DataFrame.query` with f-strings
+**Vulnerability:** Several instances of using string interpolation (f-strings) to dynamically build queries passed into `pandas.DataFrame.query()` were discovered across the codebase (e.g., `df.query(f"ID == '{region}'")`). This pattern poses a severe code injection risk when dealing with external or untrusted data, particularly because the `query()` function in this codebase uses `engine='python'` to support extension types.
+**Learning:** This existed because standard f-strings are often used for text formatting without recognizing that in an evaluation context like `query()`, they inject data literally as Python code rather than safely bound parameters.
+**Prevention:** Always avoid string interpolation within `pandas.DataFrame.query()`. Instead, use the `@` prefix for safe variable binding (e.g., `df.query("ID == @region")`) or standard boolean indexing filters.
