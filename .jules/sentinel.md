@@ -1,0 +1,4 @@
+## 2024-05-06 - Prevent Code Injection in Pandas Query
+**Vulnerability:** Found multiple instances where `pandas.DataFrame.query()` was being called with string formatting (f-strings). This allowed for potential arbitrary Python code injection through user input via the `query` or `eval` functions, especially since pandas defaults to `engine='python'` in this codebase.
+**Learning:** The codebase defaults to using the `python` engine for queries to support its extension array dtypes. This enables the direct evaluation of python code inside string formatted queries.
+**Prevention:** Always use safe parameter binding by passing variables using the `@` syntax (e.g. `df.query("col == @variable")`) instead of string interpolation (e.g. `df.query(f"col == '{variable}'")`). This ensures that variables are safely resolved by pandas as a local variable. Local variables may be safely introduced by assigning them before a query if necessary.
