@@ -629,7 +629,8 @@ def _prep_geneset_attributes_arg(attributes):
 def _handle_region_feature(resource, region):
     if hasattr(resource, "genome_features"):
         gene_annotation = resource.genome_features(attributes=["ID"])
-        results = gene_annotation.query(f"ID == '{region}'")
+        # Use boolean indexing instead of query() with f-strings to prevent code injection
+        results = gene_annotation.loc[gene_annotation["ID"] == region]
         if not results.empty:
             # the region is a feature ID
             feature = results.squeeze()
