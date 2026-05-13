@@ -262,7 +262,7 @@ def test_genome_features_virtual_contigs(ag3_sim_api, chrom):
 @parametrize_with_cases("fixture,api", cases=".")
 def test_canonical_transcript_by_id(fixture, api: AnophelesGenomeFeaturesData):
     """Test finding canonical transcript by gene ID."""
-    genes = api.genome_features().query(f"type == '{api._gff_gene_type}'")
+    genes = api.genome_features().query("type == @api._gff_gene_type")
     if len(genes) == 0:
         pytest.skip("No genes available in fixture")
 
@@ -275,7 +275,7 @@ def test_canonical_transcript_by_id(fixture, api: AnophelesGenomeFeaturesData):
 @parametrize_with_cases("fixture,api", cases=".")
 def test_canonical_transcript_by_name(fixture, api: AnophelesGenomeFeaturesData):
     """Test finding canonical transcript by gene name."""
-    genes = api.genome_features().query(f"type == '{api._gff_gene_type}'")
+    genes = api.genome_features().query("type == @api._gff_gene_type")
     if len(genes) == 0:
         pytest.skip("No genes available in fixture")
 
@@ -304,7 +304,7 @@ def test_canonical_transcript_whitespace_handling(
     fixture, api: AnophelesGenomeFeaturesData
 ):
     """Test that whitespace handling is preserved during lookup."""
-    genes = api.genome_features().query(f"type == '{api._gff_gene_type}'")
+    genes = api.genome_features().query("type == @api._gff_gene_type")
     if len(genes) == 0:
         pytest.skip("No genes available in fixture")
 
@@ -318,7 +318,7 @@ def test_canonical_transcript_case_insensitive(
     fixture, api: AnophelesGenomeFeaturesData
 ):
     """Test that gene name matching is case-insensitive."""
-    genes = api.genome_features().query(f"type == '{api._gff_gene_type}'")
+    genes = api.genome_features().query("type == @api._gff_gene_type")
     if len(genes) == 0:
         pytest.skip("No genes available in fixture")
 
@@ -333,7 +333,7 @@ def test_canonical_transcript_single_transcript_gene(
     fixture, api: AnophelesGenomeFeaturesData
 ):
     """Test that genes with only one transcript return that transcript."""
-    genes = api.genome_features().query(f"type == '{api._gff_gene_type}'")
+    genes = api.genome_features().query("type == @api._gff_gene_type")
     if len(genes) == 0:
         pytest.skip("No genes available in fixture")
 
@@ -354,7 +354,7 @@ def test_canonical_transcript_calculation_correctness(
     fixture, api: AnophelesGenomeFeaturesData
 ):
     """Test that the returned transcript has the highest exon length."""
-    genes = api.genome_features().query(f"type == '{api._gff_gene_type}'")
+    genes = api.genome_features().query("type == @api._gff_gene_type")
     if len(genes) == 0:
         pytest.skip("No genes available in fixture")
 

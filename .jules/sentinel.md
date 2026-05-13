@@ -1,0 +1,4 @@
+## 2024-05-24 - Pandas Query Injection & Insecure Deserialization
+**Vulnerability:** pandas.DataFrame.query() calls utilized Python f-strings for parameterized variables (e.g., `query(f"contig == '{contig}'")`), introducing injection vulnerabilities since pandas defaults to `engine='python'` which can execute arbitrary code. Additionally, `np.load()` was used on cached files without explicitly disabling pickle (i.e. lacking `allow_pickle=False`).
+**Learning:** Python f-strings or string formatters should never be used to construct pandas query strings. Pickled files present arbitrary code execution threats if an untrusted object replaces the cached `.npz` file.
+**Prevention:** Use pandas parameter binding `@variable` syntax exclusively for queries (e.g. `query("contig == @contig")`). Explicitly provide `allow_pickle=False` whenever invoking `numpy.load()`.
