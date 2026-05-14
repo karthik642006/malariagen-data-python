@@ -1,0 +1,4 @@
+## 2024-05-30 - pandas query() with string interpolation
+**Vulnerability:** Found multiple instances of pandas `DataFrame.query(f"...")` using string interpolation with unsanitized variables, leading to critical code injection vulnerabilities (since `engine='python'` allows arbitrary Python execution in pandas eval expressions).
+**Learning:** pandas `query()` is fundamentally unsafe when combined with f-strings and user-provided inputs. The codebase explicitly uses `engine='python'` which makes this even more dangerous.
+**Prevention:** Always use standard boolean indexing (e.g., `df.loc[df["col"] == val]`) or safe variable binding (`df.query("col == @val")`) rather than string interpolation when evaluating pandas expressions. When using `@val`, ensure the evaluation environment is tightly restricted using explicit `local_dict` mapping.
