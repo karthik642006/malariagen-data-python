@@ -1,0 +1,4 @@
+## 2024-05-17 - Insecure Deserialization via `np.load`
+**Vulnerability:** Found a call to `np.load(legacy_results_path)` without `allow_pickle=False` in `malariagen_data/anoph/base.py` used to load legacy `.npz` cache results.
+**Learning:** Legacy caching mechanisms often rely on `numpy` functions that historically allowed pickled objects by default, creating arbitrary code execution risks if the cache directory is compromised or exposed to untrusted files. Although newer NumPy versions disable `allow_pickle` by default, explicitly setting it is a defensive best practice and satisfies security linters (like Bandit).
+**Prevention:** Always explicitly pass `allow_pickle=False` to `np.load()` when reading `.npz` or `.npy` files unless loading object arrays is absolutely required (which is an anti-pattern for numerical caching) and the file's origin is strictly verified.
