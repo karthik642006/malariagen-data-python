@@ -1,0 +1,4 @@
+## 2024-05-15 - [Pandas Query Code Injection]
+**Vulnerability:** Found multiple instances where Pandas `DataFrame.query()` was being used with f-strings to inject user-controlled input directly into the query expression (e.g., `df.query(f"ID == '{region}'")`).
+**Learning:** Pandas `query()` method defaults to `engine='python'` in this codebase to support extension arrays. This means the query string is evaluated by the Python engine. F-strings allow arbitrary strings to be inserted, meaning if a user controls variables like `region` or `contig`, they could inject malicious Python expressions that get evaluated, leading to severe code injection vulnerabilities.
+**Prevention:** Never use f-strings or string concatenation with Pandas `DataFrame.query()` or `eval()`. Instead, always use the `@` syntax to bind variables safely (e.g., `df.query("ID == @region")`) or use standard boolean indexing.
