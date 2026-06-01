@@ -99,9 +99,9 @@ class AnophelesCnvFrequencyAnalysis(AnophelesCnvData, AnophelesFrequencyAnalysis
         # Access genes within the region of interest.
         df_genome_features = self.genome_features(region=region)
         sample_query_options = sample_query_options or {}
-        df_genes = df_genome_features.query(
-            f"type == '{self._gff_gene_type}'", **sample_query_options
-        )
+        df_genes = df_genome_features.loc[
+            df_genome_features["type"] == self._gff_gene_type
+        ]
 
         # Refine the region for CNV data to ensure coverage of all requested genes.
         cnv_region = Region(
